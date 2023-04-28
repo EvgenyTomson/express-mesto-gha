@@ -19,3 +19,15 @@ module.exports.createCard = (req, res) => {
     .then(card => res.status(201).send(card))//console.log(user) )
     .catch(err => res.status(500).send({ message: err.message }));//console.log(err) )
 };
+
+module.exports.addLikeCard = (req, res) => {
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .then(card => res.status(201).send(card))//console.log(user) )
+    .catch(err => res.status(500).send({ message: err.message }));//console.log(err) )
+};
+
+module.exports.deleteLikeCard = (req, res) => {
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .then(card => res.status(201).send(card))//console.log(user) )
+    .catch(err => res.status(500).send({ message: err.message }));//console.log(err) )
+};
