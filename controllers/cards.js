@@ -3,7 +3,7 @@ const {
   ERROR_CODE_INVALID_DATA,
   ERROR_CODE_NOT_FOUND,
   ERROR_CODE_DEFAULT,
-  dafaultErrorMessage
+  dafaultErrorMessage,
 } = require('../constants/constants');
 
 module.exports.getCards = (req, res) => {
@@ -66,6 +66,6 @@ module.exports.deleteLikeCard = (req, res) => {
       if(err.name === 'CastError') {
         return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       }
-      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage })
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     });
 };
