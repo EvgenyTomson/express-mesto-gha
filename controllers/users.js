@@ -1,9 +1,15 @@
 const User = require('../models/user');
+const {
+  ERROR_CODE_INVALID_DATA,
+  ERROR_CODE_NOT_FOUND,
+  ERROR_CODE_DEFAULT,
+  dafaultErrorMessage
+} = require('../constants/constants');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then(users => res.send(users))
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch(err => res.status(ERROR_CODE_DEFAULT).send({ message: err.message }));
 };
 
 module.exports.getUser = (req, res) => {
@@ -12,12 +18,12 @@ module.exports.getUser = (req, res) => {
     .then(user => res.send(user))
     .catch(err => {
       if(err.name === 'DocumentNotFoundError') {
-        return res.status(404).send({ message: 'Пользователь по указанному id не найден.' });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь по указанному id не найден.' });
       }
       if(err.name === 'CastError') {
-        return res.status(400).send({ message: 'Передан некорректный id пользователя.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Передан некорректный id пользователя.' });
       }
-      res.status(500).send({ message: err.message });
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     })
 };
 
@@ -28,9 +34,9 @@ module.exports.createUser = (req, res) => {
     .then(user => res.status(201).send(user))
     .catch(err => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       }
-      res.status(500).send({ message: err.message });
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     });
 };
 
@@ -42,12 +48,12 @@ module.exports.updateUser = (req, res) => {
     .then(user => res.status(200).send(user))
     .catch(err => {
       if(err.name === 'DocumentNotFoundError') {
-        return res.status(404).send({ message: 'Пользователь с указанным id не найден.' });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден.' });
       }
       if(err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       }
-      res.status(500).send({ message: err.message })
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage })
     });
 };
 
@@ -59,12 +65,12 @@ module.exports.updateAvatar = (req, res) => {
     .then(user => res.status(200).send(user))
     .catch(err => {
       if(err.name === 'DocumentNotFoundError') {
-        return res.status(404).send({ message: 'Пользователь с указанным id не найден.' });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Пользователь с указанным id не найден.' });
       }
       if(err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       }
-      res.status(500).send({ message: err.message })
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage })
     });
 };
 

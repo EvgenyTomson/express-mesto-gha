@@ -1,9 +1,15 @@
 const Card = require('../models/card');
+const {
+  ERROR_CODE_INVALID_DATA,
+  ERROR_CODE_NOT_FOUND,
+  ERROR_CODE_DEFAULT,
+  dafaultErrorMessage
+} = require('../constants/constants');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then(cards => res.status(200).send(cards))
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch(err => res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage }));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -12,12 +18,12 @@ module.exports.deleteCard = (req, res) => {
     .then(card => res.status(200).send(card))
     .catch(err => {
       if(err.name === 'DocumentNotFoundError') {
-        return res.status(404).send({ message: 'Карточка с указанным id не найдена.' });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Карточка с указанным id не найдена.' });
       }
       if(err.name === 'CastError') {
-        return res.status(400).send({ message: 'Передан некорректный id карточки.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Передан некорректный id карточки.' });
       }
-      res.status(500).send({ message: err.message });
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     })
 };
 
@@ -28,9 +34,9 @@ module.exports.createCard = (req, res) => {
     .then(card => res.status(201).send(card))
     .catch(err => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные при создании карточки.' });
       }
-      res.status(500).send({ message: err.message });
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     });
 };
 
@@ -40,12 +46,12 @@ module.exports.addLikeCard = (req, res) => {
     .then(card => res.status(200).send(card))
     .catch(err => {
       if(err.name === 'DocumentNotFoundError') {
-        return res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Передан несуществующий id карточки.' });
       }
       if(err.name === 'CastError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные для постановки лайка.' });
       }
-      res.status(500).send({ message: err.message })
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage })
     });
 };
 
@@ -55,11 +61,11 @@ module.exports.deleteLikeCard = (req, res) => {
     .then(card => res.status(200).send(card))
     .catch(err => {
       if(err.name === 'DocumentNotFoundError') {
-        return res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+        return res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Передан несуществующий id карточки.' });
       }
       if(err.name === 'CastError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+        return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       }
-      res.status(500).send({ message: err.message })
+      res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage })
     });
 };
