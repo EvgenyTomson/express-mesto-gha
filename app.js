@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const { DB_URI } = require('./constants/constants');
+const DB_URI = 'mongodb://localhost:27017/mestodb';
+console.log(DB_URI);
 const { PORT = 3000 } = process.env;
 const app = express();
 
