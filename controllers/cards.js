@@ -13,8 +13,23 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  console.log('deleteCard');
+  const currentUserId = req.user._id;
+  console.log('currentUserId = ', currentUserId);
+
+  Card.findById(req.params.cardId)
     .orFail()
+    .then((card) => {
+      const ownerId = card.owner.toString();
+      console.log('card owner id = ', ownerId);
+      if (ownerId !== currentUserId) {
+        console.log('ты не Хозяин!');
+        // return res.status(ERROR_CODE_DEFAULT).send({ message: 'Вы не автор этой карточки!' });
+        return Promise.reject(new Error('NotAuthor'));
+      }
+      return card;
+    })
+    .then((card) => Card.deleteOne(card))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
@@ -22,6 +37,9 @@ module.exports.deleteCard = (req, res) => {
       }
       if (err.name === 'CastError') {
         return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Передан некорректный id карточки.' });
+      }
+      if (err.message === 'NotAuthor') {
+        return res.status(401).send({ message: 'Вы не автор этой карточки!' });
       }
       return res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     });
