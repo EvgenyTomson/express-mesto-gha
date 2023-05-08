@@ -10,23 +10,14 @@ const { login, createUser } = require('./controllers/users');
 
 const authMiddleware = require('./middlewares/auth');
 const catchErrorsMiddleware = require('./middlewares/catchErrors');
-// console.log(catchErrorsMiddleware);
-
-// const authMiddleware = (req, res, next) => {
-//   req.user = {
-//     // _id: '644a458fd82a209f58c7af13',
-//     _id: '6456a2b9ad5ebd76d4c94e1b',
-//   };
-
-//   next();
-// };
+const { createUserJoi } = require('./middlewares/celebrate');
 
 app.use(express.json());
 
 mongoose.connect(DB_URI, {});
 
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', createUserJoi, createUser);
 
 app.use(authMiddleware);
 app.use('/', require('./routes/index'));
