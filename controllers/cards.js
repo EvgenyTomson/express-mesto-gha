@@ -11,7 +11,7 @@ const DefaultError = require('../errors/defaultError');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -41,7 +41,7 @@ module.exports.deleteCard = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -56,7 +56,7 @@ module.exports.createCard = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.addLikeCard = (req, res, next) => {
@@ -73,7 +73,7 @@ module.exports.addLikeCard = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.deleteLikeCard = (req, res, next) => {
@@ -90,5 +90,5 @@ module.exports.deleteLikeCard = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };

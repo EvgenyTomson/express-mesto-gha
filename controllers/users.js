@@ -16,7 +16,7 @@ module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -34,7 +34,7 @@ module.exports.getUserById = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -51,7 +51,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -80,8 +80,8 @@ module.exports.createUser = (req, res, next) => {
           throw new DefaultError(dafaultErrorMessage);
         })
 
-        .catch(next)
-    })
+        .catch(next);
+    });
 };
 
 // Логин:
@@ -110,7 +110,7 @@ module.exports.login = (req, res, next) => {
         });
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -129,7 +129,7 @@ module.exports.updateUser = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -148,5 +148,5 @@ module.exports.updateAvatar = (req, res, next) => {
       throw new DefaultError(dafaultErrorMessage);
     })
 
-    .catch(next)
+    .catch(next);
 };
