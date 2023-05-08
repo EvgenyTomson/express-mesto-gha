@@ -12,6 +12,13 @@ const createUserJoi = celebrate({
   }),
 });
 
+const loginJoi = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(1),
+  }),
+});
+
 const getUserByIdJoi = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().alphanum().length(24),
@@ -36,7 +43,7 @@ const updateUserJoi = celebrate({
 
 const createCardJoi = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
     link: Joi
       .string()
       .required()
@@ -52,6 +59,7 @@ const checkCardIdJoi = celebrate({
 
 module.exports = {
   createUserJoi,
+  loginJoi,
   getUserByIdJoi,
   updateAvatarJoi,
   updateUserJoi,

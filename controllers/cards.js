@@ -39,7 +39,7 @@ module.exports.deleteCard = (req, res) => {
         return res.status(ERROR_CODE_INVALID_DATA).send({ message: 'Передан некорректный id карточки.' });
       }
       if (err.message === 'NotAuthor') {
-        return res.status(401).send({ message: 'Вы не автор этой карточки!' });
+        return res.status(403).send({ message: 'Вы не автор этой карточки!' });
       }
       return res.status(ERROR_CODE_DEFAULT).send({ message: dafaultErrorMessage });
     });

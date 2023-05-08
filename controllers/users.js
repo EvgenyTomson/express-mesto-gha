@@ -98,7 +98,7 @@ module.exports.login = (req, res) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        // console.log('blya');
+        // console.log('нет юзера');
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
 

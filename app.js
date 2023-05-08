@@ -10,13 +10,13 @@ const { login, createUser } = require('./controllers/users');
 
 const authMiddleware = require('./middlewares/auth');
 const catchErrorsMiddleware = require('./middlewares/catchErrors');
-const { createUserJoi } = require('./middlewares/celebrate');
+const { createUserJoi, loginJoi } = require('./middlewares/celebrate');
 
 app.use(express.json());
 
 mongoose.connect(DB_URI, {});
 
-app.post('/signin', login);
+app.post('/signin', loginJoi, login);
 app.post('/signup', createUserJoi, createUser);
 
 app.use(authMiddleware);
