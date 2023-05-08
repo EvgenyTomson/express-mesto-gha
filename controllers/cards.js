@@ -46,6 +46,7 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
+  console.log('createCard');
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
@@ -59,6 +60,8 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.addLikeCard = (req, res) => {
+  console.log('addLikeCard');
+
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail()
     .then((card) => res.status(200).send(card))
@@ -74,6 +77,8 @@ module.exports.addLikeCard = (req, res) => {
 };
 
 module.exports.deleteLikeCard = (req, res) => {
+  console.log('deleteLikeCard');
+
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .orFail()
     .then((card) => res.status(200).send(card))

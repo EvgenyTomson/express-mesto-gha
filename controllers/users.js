@@ -9,11 +9,9 @@ const {
   dafaultErrorMessage,
 } = require('../constants/constants');
 
-const {
-  NotFoundError,
-  RequestError,
-  DefaultError,
-} = require('../errors/errors');
+const NotFoundError = require('../errors/notFoundError');
+const RequestError = require('../errors/requestError');
+const DefaultError = require('../errors/defaultError');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -115,16 +113,14 @@ module.exports.login = (req, res) => {
             'yeuiqdghd87e7eicdghyuct678ewrtjdbZJZTY',
             { expiresIn: '7d' },
           );
-          res.send({ token });
+          return res.send({ token });
         });
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch((err) => res.status(401).send({ message: err.message }));
 };
 
 module.exports.updateUser = (req, res) => {
-  // console.log('updateUser');
+  console.log('updateUser');
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
@@ -142,6 +138,7 @@ module.exports.updateUser = (req, res) => {
 };
 
 module.exports.updateAvatar = (req, res) => {
+  console.log('updateAvatar');
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })

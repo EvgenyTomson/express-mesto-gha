@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 
 const DB_URI = 'mongodb://localhost:27017/mestodb';
 const { PORT = 3000 } = process.env;
@@ -30,6 +31,7 @@ app.post('/signup', createUser);
 app.use(authMiddleware);
 app.use('/', require('./routes/index'));
 
+app.use(errors({ message: 'Ошибка валидации данных!' }));
 app.use(catchErrorsMiddleware);
 
 app.listen(PORT, () => {
