@@ -1,8 +1,6 @@
 const { dafaultErrorMessage } = require('../constants/constants');
 
 module.exports = (err, req, res, next) => {
-  console.log('Попали в catchErrorsMiddleware');
-  // console.log(err);
   const { statusCode = 500, message } = err;
 
   res
