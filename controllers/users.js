@@ -65,10 +65,14 @@ module.exports.createUser = (req, res, next) => {
         email, password: hash, name, about, avatar,
       })
         .then((user) => {
-          const newUser = user.toObject();
-          delete newUser.password;
+          /*
+          не понимаю, но по какой-то причине в этом контроллере user приходит
+          с полем password несмотря на наличие в схеме флага select: false.
+          приходится удалять это поле самому.
+          */
+          const noPasswordUser = user.toObject({ useProjection: true });
 
-          return res.status(201).send(newUser);
+          return res.status(201).send(noPasswordUser);
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
