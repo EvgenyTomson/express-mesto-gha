@@ -19,8 +19,6 @@ module.exports.deleteCard = (req, res, next) => {
       const ownerId = card.owner.toString();
       if (ownerId !== currentUserId) {
         throw new ForbiddenError('Вы не автор этой карточки.');
-        // return next(new ForbiddenError('Вы не автор этой карточки.'));
-        // не работает. ошибка приходит на клиент, но карточка удаляется.
       }
       return card;
     })

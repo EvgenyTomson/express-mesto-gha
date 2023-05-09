@@ -25,6 +25,4 @@ app.use('/', require('./routes/index'));
 app.use(errors({ message: 'Ошибка валидации данных!' }));
 app.use(catchErrorsMiddleware);
 
-app.listen(PORT, () => {
-  // console.log(`Сервер запущен на порту: ${PORT}`);
-});
+app.listen(PORT, () => {});
