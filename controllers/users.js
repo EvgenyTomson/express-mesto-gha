@@ -2,15 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const {
-  dafaultErrorMessage,
-} = require('../constants/constants');
-
 const AuthError = require('../errors/authError');
 const ConflictError = require('../errors/conflictEror');
 const NotFoundError = require('../errors/notFoundError');
 const RequestError = require('../errors/requestError');
-const DefaultError = require('../errors/defaultError');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -20,21 +15,18 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  console.log('getUserById');
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        throw new NotFoundError('Пользователь по указанному id не найден.');
+        return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       if (err.name === 'CastError') {
-        throw new RequestError('Передан некорректный id пользователя.');
+        return next(new RequestError('Передан некорректный id пользователя.'));
       }
-      throw new DefaultError(dafaultErrorMessage);
+      return next(err);
     })
-
-    .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -43,15 +35,10 @@ module.exports.getCurrentUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        throw new NotFoundError('Пользователь по указанному id не найден.');
+        return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
-      if (err.name === 'CastError') {
-        throw new RequestError('Передан некорректный id пользователя.');
-      }
-      throw new DefaultError(dafaultErrorMessage);
+      return next(err);
     })
-
-    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -65,43 +52,35 @@ module.exports.createUser = (req, res, next) => {
         email, password: hash, name, about, avatar,
       })
         .then((user) => {
-          /*
-          не понимаю, но по какой-то причине в этом контроллере user приходит
-          с полем password несмотря на наличие в схеме флага select: false.
-          приходится удалять это поле самому.
-          */
           const noPasswordUser = user.toObject({ useProjection: true });
 
           return res.status(201).send(noPasswordUser);
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            throw new RequestError('Переданы некорректные данные при создании пользователя.');
+            return next(new RequestError('Переданы некорректные данные при создании пользователя.'));
           }
           if (err.code === 11000) {
-            throw new ConflictError('Пользователь с указанным e-mail уже зарегистрирован.');
+            return next(new ConflictError('Пользователь с указанным e-mail уже зарегистрирован.'));
           }
-          throw new DefaultError(dafaultErrorMessage);
+          return next(err);
         })
-
-        .catch(next);
     });
 };
 
-// Логин:
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthError('Неправильные почта или пароль.');
+        return next(new AuthError('Неправильные почта или пароль.'));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new AuthError('Неправильные почта или пароль.');
+            return next(new AuthError('Неправильные почта или пароль.'));
           }
 
           const token = jwt.sign(
@@ -125,15 +104,10 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        throw new NotFoundError('Пользователь по указанному id не найден.');
+        return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
-      if (err.name === 'ValidationError') {
-        throw new RequestError('Переданы некорректные данные при обновлении профиля.');
-      }
-      throw new DefaultError(dafaultErrorMessage);
+      return next(err);
     })
-
-    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -144,13 +118,8 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        throw new NotFoundError('Пользователь по указанному id не найден.');
+        return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
-      if (err.name === 'ValidationError') {
-        throw new RequestError('Переданы некорректные данные при обновлении аватара.');
-      }
-      throw new DefaultError(dafaultErrorMessage);
+      return next(err);
     })
-
-    .catch(next);
 };
