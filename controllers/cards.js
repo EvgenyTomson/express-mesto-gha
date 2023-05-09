@@ -31,9 +31,6 @@ module.exports.deleteCard = (req, res, next) => {
       if (err.name === 'CastError') {
         return next(new RequestError('Передан некорректный id карточки.'));
       }
-      if (err.statusCode === 403) {
-        return next(new ForbiddenError('Вы не автор этой карточки.'));
-      }
       return next(err);
     });
 };

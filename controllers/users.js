@@ -97,6 +97,12 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.updateUser = (req, res, next) => changeUserData(req.user._id, req.body, res, next);
+module.exports.updateUser = (req, res, next) => {
+  const { name, about } = req.body;
+  return changeUserData(req.user._id, { name, about }, res, next);
+};
 
-module.exports.updateAvatar = (req, res, next) => changeUserData(req.user._id, req.body, res, next);
+module.exports.updateAvatar = (req, res, next) => {
+  const { avatar } = req.body;
+  return changeUserData(req.user._id, { avatar }, res, next);
+};
