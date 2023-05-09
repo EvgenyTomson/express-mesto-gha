@@ -12,6 +12,7 @@ app.use(express.json());
 mongoose.connect(DB_URI, {});
 
 app.use('/', require('./routes/index'));
+
 app.use(catchErrorsMiddleware);
 
 app.listen(PORT, () => {});
