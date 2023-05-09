@@ -7,6 +7,30 @@ const ConflictError = require('../errors/conflictEror');
 const NotFoundError = require('../errors/notFoundError');
 const RequestError = require('../errors/requestError');
 
+const findUser = (id, res, next) => {
+  User.findById(id)
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'DocumentNotFoundError') {
+        return next(new NotFoundError('Пользователь по указанному id не найден.'));
+      }
+      return next(err);
+    });
+};
+
+const changeUserData = (id, newData, res, next) => {
+  User.findByIdAndUpdate(id, newData, { new: true, runValidators: true })
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'DocumentNotFoundError') {
+        return next(new NotFoundError('Пользователь по указанному id не найден.'));
+      }
+      return next(err);
+    });
+};
+
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
@@ -14,32 +38,9 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
-    .orFail()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователь по указанному id не найден.'));
-      }
-      if (err.name === 'CastError') {
-        return next(new RequestError('Передан некорректный id пользователя.'));
-      }
-      return next(err);
-    });
-};
+module.exports.getUserById = (req, res, next) => findUser(req.params.userId, res, next);
 
-module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .orFail()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователь по указанному id не найден.'));
-      }
-      return next(err);
-    });
-};
+module.exports.getCurrentUser = (req, res, next) => findUser(req.user._id, res, next);
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -96,30 +97,6 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.updateUser = (req, res, next) => {
-  const { name, about } = req.body;
+module.exports.updateUser = (req, res, next) => changeUserData(req.user._id, req.body, res, next);
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .orFail()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователь по указанному id не найден.'));
-      }
-      return next(err);
-    });
-};
-
-module.exports.updateAvatar = (req, res, next) => {
-  const { avatar } = req.body;
-
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .orFail()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователь по указанному id не найден.'));
-      }
-      return next(err);
-    });
-};
+module.exports.updateAvatar = (req, res, next) => changeUserData(req.user._id, req.body, res, next);
