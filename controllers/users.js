@@ -26,7 +26,7 @@ module.exports.getUserById = (req, res, next) => {
         return next(new RequestError('Передан некорректный id пользователя.'));
       }
       return next(err);
-    })
+    });
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -38,7 +38,7 @@ module.exports.getCurrentUser = (req, res, next) => {
         return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       return next(err);
-    })
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -64,7 +64,7 @@ module.exports.createUser = (req, res, next) => {
             return next(new ConflictError('Пользователь с указанным e-mail уже зарегистрирован.'));
           }
           return next(err);
-        })
+        });
     });
 };
 
@@ -107,7 +107,7 @@ module.exports.updateUser = (req, res, next) => {
         return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       return next(err);
-    })
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -121,5 +121,5 @@ module.exports.updateAvatar = (req, res, next) => {
         return next(new NotFoundError('Пользователь по указанному id не найден.'));
       }
       return next(err);
-    })
+    });
 };

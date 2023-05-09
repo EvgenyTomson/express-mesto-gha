@@ -6,8 +6,6 @@ const usersRouter = require('./users');
 
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
-router.use('/*', (req, res, next) => {
-  return next(new NotFoundError('Запись не найдена.'))
-});
+router.use('/*', (req, res, next) => next(new NotFoundError('Запись не найдена.')));
 
 module.exports = router;

@@ -36,8 +36,8 @@ module.exports.deleteCard = (req, res, next) => {
       if (err.statusCode === 403) {
         return next(new ForbiddenError('Вы не автор этой карточки.'));
       }
-      next(err);
-    })
+      return next(err);
+    });
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -61,7 +61,7 @@ module.exports.addLikeCard = (req, res, next) => {
         return next(new RequestError('Передан некорректный id карточки.'));
       }
       return next(err);
-    })
+    });
 };
 
 module.exports.deleteLikeCard = (req, res, next) => {
@@ -76,5 +76,5 @@ module.exports.deleteLikeCard = (req, res, next) => {
         return next(new RequestError('Передан некорректный id карточки.'));
       }
       return next(err);
-    })
+    });
 };

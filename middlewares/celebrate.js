@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+
 const linkPattern = /(https?:\/\/)(w{3}\.)?\w+[-.~:/?#[\]@!$&'()*+,;=]*#?/;
 
 const createUserJoi = celebrate({
